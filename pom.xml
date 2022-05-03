@@ -2,25 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <parent>
-        <artifactId>atguigu-project-ct</artifactId>
-        <groupId>atguigu</groupId>
-        <version>1.0</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>atguigu-project-ct</artifactId>
+
+    <groupId>org.ms</groupId>
+    <artifactId>dianxin</artifactId>
     <packaging>pom</packaging>
+    <version>1.0</version>
     <modules>
-        <module>ct-common</module>
-        <module>ct-producer</module>
-        <module>ct-consumer</module>
-        <module>ct-consumer-coprocessor</module>
-        <module>ct-analysis</module>
-        <module>ct-cache-ext</module>
-        <module>ct-web</module>
+        <module>common</module>
+        <module>producer</module>
+        <module>kafka-producer</module>
+        <module>kafka-consumer-hbase-producer</module>
     </modules>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
 </project>
