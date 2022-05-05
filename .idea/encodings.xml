@@ -9,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/kafkasink2hbase/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/producer/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/producer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sparksink2mysql/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/sparksink2mysql/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
