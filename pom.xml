@@ -13,6 +13,7 @@
         <module>common</module>
         <module>kafka-producer</module>
         <module>kafkasink2hbase</module>
+        <module>sparksink2mysql</module>
     </modules>
 
     <properties>
