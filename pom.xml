@@ -11,9 +11,8 @@
     <version>1.0</version>
     <modules>
         <module>common</module>
-        <module>producer</module>
         <module>kafka-producer</module>
-        <module>kafka-consumer-hbase-producer</module>
+        <module>kafkasink2hbase</module>
     </modules>
 
     <properties>

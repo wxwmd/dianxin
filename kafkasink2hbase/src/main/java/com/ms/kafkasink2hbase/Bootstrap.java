@@ -15,6 +15,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Bootstrap {
         kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG,"wxwmd");
 
         KafkaConsumer<String,String> kafkaConsumer=new KafkaConsumer<String, String>(kafkaProps);
-        kafkaConsumer.subscribe(Collections.singletonList("call-log"));
+        kafkaConsumer.subscribe(Collections.singletonList("calllog"));
 
         Configuration hbaseConf = HBaseConfiguration.create();
         hbaseConf.set("hbase.zookeeper.quorum", "192.168.126.128:2181");
@@ -44,8 +45,13 @@ public class Bootstrap {
                 List<Put> callLogSink = new ArrayList<>();
                 for (ConsumerRecord record:callLogs){
                     Calllog calllog=JSONObject.parseObject((String) record.value(), Calllog.class);
-                    System.out.println(calllog.toString());
-
+                    String rowkey=calllog.getCall1()+"-"+calllog.getCall2()+"-"+calllog.getCalltime();
+                    Put put=new Put(rowkey.getBytes());
+                    put.addColumn("caller".getBytes(),"caller1".getBytes(),calllog.getCall1().getBytes());
+                    put.addColumn("caller".getBytes(),"caller2".getBytes(),calllog.getCall2().getBytes());
+                    put.addColumn("info".getBytes(),"calltime".getBytes(),calllog.getCalltime().getBytes());
+                    put.addColumn("info".getBytes(),"duration".getBytes(),calllog.getDuration().getBytes());
+                    callLogSink.add(put);
                 }
                 callLogTable.put(callLogSink);
             }
