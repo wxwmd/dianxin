@@ -13,8 +13,14 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.VoidFunction;
 import scala.Tuple2;
 import scala.Tuple3;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Iterator;
+import java.util.Locale;
 
 public class SparkHbase {
     public static void main(String[] args) {
@@ -49,7 +55,7 @@ public class SparkHbase {
             @Override
             public Tuple3<String, String, Integer> call(CallLog callLog) throws Exception {
                 String caller = callLog.getCaller1();
-                String month = callLog.getCallTime().substring(0, 7);
+                String month = callLog.getCallTime().substring(0, 6);
                 return Tuple3.apply(caller, month, 1);
             }
         }).keyBy(new Function<Tuple3<String, String, Integer>, Tuple2<String, String>>() {
@@ -69,5 +75,24 @@ public class SparkHbase {
             }
         });
         resultRDD.collect().forEach(System.out::println);
+
+        // 将结果插入到mysql中
+        String mysqlDriver = "com.mysql.jdbc.Driver";
+        String mysqlUrl = "jdbc:mysql://localhost:3306/dianxin";
+        String userName = "root";
+        String passWd = "w2000x0322w";
+
+        resultRDD.foreachPartition(new VoidFunction<Iterator<Tuple3<String, String, Integer>>>() {
+            @Override
+            public void call(Iterator<Tuple3<String, String, Integer>> results) throws Exception {
+                Connection mysqlConnection = DriverManager.getConnection(mysqlUrl, userName, passWd);
+                String sql="insert into tb_month_tel(caller,month,sum_count) values(%s,%s,%d)";
+                while (results.hasNext()){
+                    Tuple3<String, String, Integer> result = results.next();
+                    String insertSQL = String.format(sql, result._1(), result._2(), result._3());
+                    mysqlConnection.prepareStatement(insertSQL).executeUpdate();
+                }
+            }
+        });
     }
 }
